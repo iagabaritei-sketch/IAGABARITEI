@@ -130,7 +130,7 @@ export default function ChatIA() {
               Seu mentor IA está pronto! Digite sua primeira pergunta para começar.
             </p>
             <p className="text-sm mt-2">
-              Ex: "Crie um plano de estudos para [meu objetivo]"
+              Ex: &quot;Crie um plano de estudos para [meu objetivo]&quot;
             </p>
           </div>
         ) : (
