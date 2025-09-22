@@ -1,103 +1,91 @@
-import Image from "next/image";
+// /app/acesso/page.js
+'use client';
+import { useState } from 'react';
+import { supabase } from '../../utils/supabaseClient'; // Importando nossa conexão
 
-export default function Home() {
+export default function AcessoPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true); // Controla se é tela de Login ou Cadastro
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  const handleAuth = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
+
+    try {
+      if (isLogin) {
+        // Lógica de LOGIN
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        // O redirecionamento será tratado pelo Supabase
+        setMessage('Login bem-sucedido! Redirecionando...');
+        window.location.href = '/dashboard'; 
+      } else {
+        // Lógica de CADASTRO
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        setMessage('Cadastro realizado! Verifique seu e-mail para confirmar a conta.');
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-lg border border-cyan-500/30">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-cyan-400">IA Gabaritei</h1>
+          <p className="mt-2 text-gray-400">{isLogin ? 'Acesse sua Vantagem Competitiva' : 'Crie sua Conta de Acesso'}</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        
+        {message && <p className="text-sm text-green-400 text-center">{message}</p>}
+        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
+        <form onSubmit={handleAuth} className="space-y-6">
+          <div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Seu melhor e-mail"
+              className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Crie uma senha forte"
+              className="w-full px-4 py-2 text-white bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full px-4 py-2 font-bold text-gray-900 bg-cyan-400 rounded-md hover:bg-cyan-300 transition-colors"
+          >
+            {isLogin ? 'ENTRAR NO COMANDO' : 'CRIAR MINHA CONTA'}
+          </button>
+        </form>
+        <p className="text-sm text-center text-gray-400">
+          {isLogin ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}
+          <button onClick={() => setIsLogin(!isLogin)} className="font-bold text-cyan-400 hover:underline ml-1">
+            {isLogin ? 'Cadastre-se' : 'Faça Login'}
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
