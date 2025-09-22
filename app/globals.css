@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Regra para garantir que os vídeos ocupem todo o espaço */
+.aspect-video iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Animação para o efeito de brilho nos cards */
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s infinite ease-in-out;
+}
+
+/* Custom Scrollbar (para o chat) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Largura para desktop */
+  height: 8px; /* Altura para mobile, se a rolagem for horizontal */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a202c; /* Fundo da barra */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #00bcd4; /* Cor do "polegar" da barra */
+  border-radius: 10px;
+  border: 2px solid #1a202c; /* Padding em torno do polegar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #00a0b0; /* Cor ao passar o mouse */
+}
+
+/* Para navegadores Firefox (não usa -webkit) */
+.custom-scrollbar {
+  scrollbar-width: thin; /* "thin" ou "auto" */
+  scrollbar-color: #00bcd4 #1a202c; /* thumb track */
+}
+
+/* Animação para o efeito de brilho nos cards (já deve estar aqui) */
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s infinite ease-in-out;
+}

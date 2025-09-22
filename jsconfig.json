@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["app/components/*"],
+      "@/utils/*": ["utils/*"] // Certifique-se que esta linha está aqui
+    }
+  }
+}
